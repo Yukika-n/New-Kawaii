@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <title>Department Master</title>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="{% url 'employee:index' %}" class="logo-link">SaleScience</a>
+            <nav class="navigation">
+                <div class="account">
+                    <p>Welcome Back : Admin</p>
+                </div>
+            </nav>
+            <div class="hamburger">&equiv;</div>
+        </header>
+        <main>
+            <div class="side">
+                <nav class="side-bar-navigation">
+                    <ul class="gnav">
+
+                        <li class="list-group">
+                            <div class="parent-list">General</div>
+                            <ul>
+                                <li class="child-list"><a href="{% url 'employee:dashboard' %}">Dashboard</a></li>
+                                <li class="child-list"><a href="{% url 'employee:schedule' %}">Schedule</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="list-group">
+                            <div class="parent-list">Masters</div>
+                            <ul>
+                                <li class="child-list"><a href="{% url 'employee:index' %}">Employees</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_dpt' %}">Departments</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_pst' %}">Positions</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_nt' %}">Nationalities</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="list-group">
+                            <div class="parent-list"><a>People</a></div>
+                            <ul>
+                                <li class="child-list"><a href="#">Team</a></li>
+                                <li class="child-list"><a href="#">Time Off</a></li>
+                                <li class="child-list"><a href="#">Expenses</a></li>
+                                <li class="child-list"><a href="#">Salary revision</a></li>
+                                <li class="child-list"><a href="#">Benefits</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="list-group">
+                            <div class="parent-list"><a>Payment</a></div>
+                            <ul>
+                                <li class="child-list"><a href="#">Payroll</a></li>
+                                <li class="child-list"><a href="#">Invoices</a></li>
+                                <li class="child-list"><a href="#">Payment methods</a></li>
+                                <li class="child-list"><a href="#">Pay contractors</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="list-group">
+                            <div class="parent-list"><a>Documents</a></div>
+                            <ul>
+                              <li class="child-list"><a>Agreements</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="main-content">
+                <h1 class="page-title">Department Details - {{ department.name }}</h1>
+                <div class="flex-center-container">
+                    <a href="{% url 'employee:edit_department' department.id %}" class="btn btn-edit">Edit</a>
+                    <a href="{% url 'employee:delete_department' department.id %}" class="btn btn-delete">Delete</a>
+                    <a href="#" onclick="history.back()" class="btn btn-go-back">Go Back</a>
+                </div>
+
+                <h2 class="section-title">Sections:</h2>
+                <ul class="d-list">
+                    {% for child_department in department.children.all %}
+                        <li class="section-item">
+                                <div class="flex-container">
+                                    <span class="department-name">{{ child_department.name }}</span>
+                                    <div class="edit-delete-container">
+                                        <a href="{% url 'employee:edit_department' child_department.id %}" class="btn btn-edit">Edit</a>
+                                        <a href="{% url 'employee:delete_department' child_department.id %}" class="btn btn-delete">Delete</a>
+                                    </div>
+                                </div>
+                            <div class="employee-cards">
+                                {% for employee in child_department.employee_set.all %}
+                        <div class="employee-card">
+                            <div class="image-name-container">
+                                <div class="employee-image">
+                                    {% if employee.image %}
+                                        <a href="{% url 'employee:employee_detail' employee.id %}"><img src="{{ employee.image.url }}" alt="Employee Image"></a>
+                                    {% else %}
+                                        <p>No Image</p>
+                                    {% endif %}
+                                    <div class="mask">
+                                        <div class="caption">Details</div>
+                                    </div>
+                                </div>
+                                <div class="employee-name">
+                                    <p>{{ employee.name }}</p>
+                                </div>
+                            </div>
+                            <div class="employee-details">
+                                <table>
+                                    <tr>
+                                        <td><span class="detail-label">ID:</span></td>
+                                        <td>{{ employee.empcode }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="detail-label">Position:</span></td>
+                                        <td>{{ employee.position }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="detail-label">Dept:</span></td>
+                                        <td>{{ employee.department.name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="detail-label">Email:</span></td>
+                                        <td>{{ employee.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="detail-label">Start:</span></td>
+                                        <td>{{ employee.start }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="detail-label">Region:</span></td>
+                                        <td>{{ employee.workplace }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                                {% endfor %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </main>
+    </div>

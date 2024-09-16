@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <title>Employee Management System</title>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="{% url 'employee:index' %}" class="logo-link">SaleScience</a>
+            <nav class="navigation">
+                <div class="account">
+                    <p>Welcome Back : Admin</p>
+                </div>
+            </nav>
+            <div class="hamburger">&equiv;</div>
+        </header>
+        <main>
+            <div class="side">
+                <nav class="side-bar-navigation">
+                    <ul class="gnav">
+                        <li class="list-group">
+                            <div class="parent-list">General</div>
+                            <ul>
+                                <li class="child-list"><a href="{% url 'employee:dashboard' %}">Dashboard</a></li>
+                                <li class="child-list"><a href="{% url 'employee:schedule' %}">Schedule</a></li>
+                            </ul>
+                        </li>
+                        <li class="list-group">
+                            <div class="parent-list">Masters</div>
+                            <ul>
+                                <li class="child-list"><a href="{% url 'employee:index' %}">Employees</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_dpt' %}">Departments</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_pst' %}">Positions</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_nt' %}">Nationalities</a></li>
+                            </ul>
+                        </li>
+                        <li class="list-group">
+                            <div class="parent-list">People</div>
+                            <ul>
+                                <li class="child-list"><a href="#">Team</a></li>
+                                <li class="child-list"><a href="#">Time Off</a></li>
+                                <li class="child-list"><a href="#">Expenses</a></li>
+                                <li class="child-list"><a href="#">Salary revision</a></li>
+                                <li class="child-list"><a href="#">Benefits</a></li>
+                            </ul>
+                        </li>
+                        <li class="list-group">
+                            <div class="parent-list">Payment</div>
+                            <ul>
+                                <li class="child-list"><a href="#">Payroll</a></li>
+                                <li class="child-list"><a href="#">Invoices</a></li>
+                                <li class="child-list"><a href="#">Payment methods</a></li>
+                                <li class="child-list"><a href="#">Pay contractors</a></li>
+                            </ul>
+                        </li>
+                        <li class="list-group">
+                            <div class="parent-list">Documents</div>
+                            <ul>
+                              <li class="child-list"><a>Agreements</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="main-content">
+                <h1 class="page-title">Employees <span>({{ total_employees }})</span></h1>
+                <div class="search-container">
+                    <form method="GET" action="{% url 'employee:search_employee' %}" class="search-form">
+                        <input type="text" name="keyword" placeholder="Type here..." class="search-input">
+                        <button type="submit" class="btn search-button">Search</button>
+                        <button type="button" onclick="showForm()" class="btn advanced-search-button">Advanced Search</button>
+                    </form>
+                </div>
+                <script>
+                    let showForm = () => {
+                        document.querySelector('.advanced_search_container').style.display = 'block';
+                    }
+
+                    let closeForm = () => {
+                        document.querySelector('.advanced_search_container').style.display = 'none';
+                    }
+                </script>
+                <div class="advanced_search_container">
+                    <form method="POST" action="{% url 'employee:advanced_search' %}" class="advanced-search-form" id="form">
+                        {% csrf_token %}
+                        <div class="and-or">
+                            <input type="radio" id="and_radio" name="search_type" value="and" checked>
+                            <label for="and_radio">AND</label>
+                            <input type="radio" id="or_radio" name="search_type" value="or">
+                            <label for="or_radio">OR</label>
+                        </div>
+                        <div class="form-group">
+                            <div class="big-label">Position:</div>
+                            <div class="checkbox-container">
+                                {% for position in positions %}
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="position" value="{{ position.id }}">
+                                    {{ position.name }}
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="big-label">Department:</div>
+                            <div class="checkbox-container">
+                                {% for department in departments %}
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="department" value="{{ department.id }}">
+                                    {{ department.name }}
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="big-label">Workplace:</div>
+                            <div class="checkbox-container">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="workplace" value="Tokyo">
+                                    Tokyo
+                                </label>
+                                <label class="checkbox-flex-item">
+                                    <input type="checkbox" name="workplace" value="Osaka">
+                                    Osaka
+                                </label>
+                                <label class="checkbox-flex-item">
+                                    <input type="checkbox" name="workplace" value="Nagoya">
+                                    Nagoya
+                                </label>
+                                <label class="checkbox-flex-item">
+                                    <input type="checkbox" name="workplace" value="Hiroshima">
+                                    Hiroshima
+                                </label>
+                            </div>
+                        </div>
+                        <div class="flex-center-container apply-btn">
+                            <button type="submit" class="btn apply-search-button">Apply and Search</button>
+                            <button type="button" onclick="closeForm()" class="btn close-btn">Close</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="add-btn-container"><a href="{% url 'employee:add_employee' %}" class="btn btn-add">Add +</a></div>
+                <div class="export-container"><a class="btn export-btn" href="{% url 'employee:export' %}">Export</a></div>
+                    <div class="employee-cards">
+                        {% for employee in employees %}
+                        <div class="employee-card">
+                            <div class="image-name-container">
+                                <div class="employee-image">
+                                    {% if employee.image %}
+                                        <a href="{% url 'employee:employee_detail' employee.id %}"><img src="{{ employee.image.url }}" alt="Employee Image"></a>
+                                    {% else %}
+                                        <p>No Image</p>
+                                    {% endif %}
+                                    <div class="mask">
+                                        <div class="caption">Details</div>
+                                    </div>
+                                </div>
+                                <div class="employee-name">
+                                    <p>{{ employee.name }}</p>
+                                </div>
+                            </div>
+                            <div class="employee-details">
+                                <table>
+                                    <tr>
+                                        <td><span class="detail-label">ID:</span></td>
+                                        <td>{{ employee.empcode }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="detail-label">Position:</span></td>
+                                        <td>{{ employee.position }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="detail-label">Dept:</span></td>
+                                        <td>{{ employee.department.name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="detail-label">Email:</span></td>
+                                        <td>{{ employee.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="detail-label">Start:</span></td>
+                                        <td>{{ employee.start }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="detail-label">Region:</span></td>
+                                        <td>{{ employee.workplace }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+        </main>
+    </div>
+</body>
+</html>

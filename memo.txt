@@ -1,0 +1,38 @@
+    # POSITION_CHOICES = (
+    #     ('Trainee', 'Trainee'),
+    #     ('Part-timer', 'Part-timer'),
+    #     ('Employee', 'Employee'),
+    #     ('Team Leader', 'Team Leader'),
+    #     ('Supervisor', 'Supervisor'),
+    #     ('Manager', 'Manager'),
+    #     ('Director', 'Director'),
+    #     ('General Manager', 'General Manager'),
+    #     ('President', 'President'),
+    # )
+
+<!--                                <ul class="d-list">-->
+<!--                                    {% for gender_count in gender_counts %}-->
+<!--                                    <li>{{ gender_count.gender }}: <span class="count">{{ gender_count.count }}</span></li>-->
+<!--                                    {% endfor %}-->
+<!--                                </ul>-->
+
+<!--                                <ul class="d-list">-->
+<!--                                    {% for workplace_count in workplace_counts %}-->
+<!--                                    <li>{{ workplace_count.workplace }}: <span class="count">{{ workplace_count.count }}</span></li>-->
+<!--                                    {% endfor %}-->
+<!--                                </ul>-->
+
+
+<!--                        <ul class="d-list">-->
+<!--                            {% for parent_department in parent_departments %}-->
+<!--                            <li><span class="department-name">{{ parent_department.name }}</span>-->
+<!--                                <ul class="d-sub-list">-->
+<!--                            {% for department_count in department_counts %}-->
+<!--                                {% if department_count.parent_id == parent_department.id %}-->
+<!--                                    <li>{{ department_count.name }}: <span class="count">{{ department_count.count }}</span></li>-->
+<!--                                {% endif %}-->
+<!--                            {% endfor %}-->
+<!--                                </ul>-->
+<!--                            </li>-->
+<!--                        {% endfor %}-->
+<!--                        </ul>-->

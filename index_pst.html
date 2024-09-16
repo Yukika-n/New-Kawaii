@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Position Master</title>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="{% url 'employee:index' %}" class="logo-link">SaleScience</a>
+            <nav class="navigation">
+                <div class="account">
+                    <p>Welcome Back : Admin</p>
+                </div>
+            </nav>
+            <div class="hamburger">&equiv;</div>
+        </header>
+        <main>
+            <div class="side">
+                <nav class="side-bar-navigation">
+                    <ul class="gnav">
+
+                        <li class="list-group">
+                            <div class="parent-list">General</div>
+                            <ul>
+                                <li class="child-list"><a href="{% url 'employee:dashboard' %}">Dashboard</a></li>
+                                <li class="child-list"><a href="{% url 'employee:schedule' %}">Schedule</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="list-group">
+                            <div class="parent-list">Masters</div>
+                            <ul>
+                                <li class="child-list"><a href="{% url 'employee:index' %}">Employees</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_dpt' %}">Departments</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_pst' %}">Positions</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_nt' %}">Nationalities</a></li>
+                            </ul>
+                        </li>
+                        <li class="list-group">
+                            <div class="parent-list"><a>People</a></div>
+                            <ul>
+                                <li class="child-list"><a href="#">Team</a></li>
+                                <li class="child-list"><a href="#">Time Off</a></li>
+                                <li class="child-list"><a href="#">Expenses</a></li>
+                                <li class="child-list"><a href="#">Salary revision</a></li>
+                                <li class="child-list"><a href="#">Benefits</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="list-group">
+                            <div class="parent-list"><a>Payment</a></div>
+                            <ul>
+                                <li class="child-list"><a href="#">Payroll</a></li>
+                                <li class="child-list"><a href="#">Invoices</a></li>
+                                <li class="child-list"><a href="#">Payment methods</a></li>
+                                <li class="child-list"><a href="#">Pay contractors</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="list-group">
+                            <div class="parent-list"><a>Documents</a></div>
+                            <ul>
+                              <li class="child-list"><a>Agreements</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="main-content">
+                <h1 class="page-title">Positions</h1>
+                <div class="add-btn-container"><a href="{% url 'employee:add_pst' %}" class="btn btn-add">Add +</a></div>
+                <div class="list-data p">
+                    <div class="d-card">
+                        <h3 class="ribbon d-section-title">All Positions</h3>
+                        <ul class="d-list">
+                            {% for position in positions %}
+                                <li class="list-n-button"><span>{{ position.name }}</span>
+                                    <div class="button-group">
+                                        <a href="{% url 'employee:edit_pst' position.id %}" class="btn btn-add">Edit</a>
+                                        <a href="{% url 'employee:delete_pst' position.id %}" class="btn btn-add">Delete</a>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="d-card pst">
+                        <h3 class="ribbon detail-header">Position Distribution</h3>
+                        <div><canvas id="positionChart"></canvas></div>
+
+<!--                        <h3 class="ribbon d-section-title">Distribution</h3>-->
+<!--                        <ul class="d-list">-->
+<!--                            {% for position_count in position_counts %}-->
+<!--                            <li>{{ position_count.name }}: <span class="count">{{ position_count.count }}</span></li>-->
+<!--                            {% endfor %}-->
+<!--                        </ul>-->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    let position_ctx = document.getElementById('positionChart').getContext('2d');
+    let positionChart = new Chart(position_ctx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ position_labels|safe }},
+            datasets: [{
+                data: {{ position_data|safe }},
+                backgroundColor: [
+                    '#fff4bf',
+                    '#caffbf',
+                    '#bffff4',
+                    '#bfcaff',
+                    '#f4bfff',
+                    '#ffc0cb',
+                    '#fbffbf',
+                    '#bfe3ff',
+                    '#e8bfff',
+                    '#800000'
+                ],
+                borderWidth: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(1) + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+
+    </script>
+
+</body>
+</html>

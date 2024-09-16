@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% load widget_tweaks %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <title>Edit Employee</title>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="{% url 'employee:index' %}" class="logo-link">SaleScience</a>
+            <nav class="navigation">
+                <div class="account">
+                    <p>Welcome Back : Admin</p>
+                </div>
+            </nav>
+            <div class="hamburger">&equiv;</div>
+        </header>
+        <main>
+            <div class="side">
+                <nav class="side-bar-navigation">
+                    <ul class="gnav">
+
+                        <li class="list-group">
+                            <div class="parent-list">General</div>
+                            <ul>
+                                <li class="child-list"><a href="{% url 'employee:dashboard' %}">Dashboard</a></li>
+                                <li class="child-list"><a href="{% url 'employee:schedule' %}">Schedule</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="list-group">
+                            <div class="parent-list">Masters</div>
+                            <ul>
+                                <li class="child-list"><a href="{% url 'employee:index' %}">Employees</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_dpt' %}">Departments</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_pst' %}">Positions</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_nt' %}">Nationalities</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="list-group">
+                            <div class="parent-list"><a>People</a></div>
+                            <ul>
+                                <li class="child-list"><a href="#">Team</a></li>
+                                <li class="child-list"><a href="#">Time Off</a></li>
+                                <li class="child-list"><a href="#">Expenses</a></li>
+                                <li class="child-list"><a href="#">Salary revision</a></li>
+                                <li class="child-list"><a href="#">Benefits</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="list-group">
+                            <div class="parent-list"><a>Payment</a></div>
+                            <ul>
+                                <li class="child-list"><a href="#">Payroll</a></li>
+                                <li class="child-list"><a href="#">Invoices</a></li>
+                                <li class="child-list"><a href="#">Payment methods</a></li>
+                                <li class="child-list"><a href="#">Pay contractors</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="list-group">
+                            <div class="parent-list"><a>Documents</a></div>
+                            <ul>
+                              <li class="child-list"><a>Agreements</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="main-content">
+                <h1 class="page-title">Edit Employee</h1>
+                <div class="flex-center-container">
+                    <div class="d-card">
+                        <div class="flex-center-container">
+                            <form method="post" enctype="multipart/form-data" class="employee-form">
+                                <div class="form">
+                                    {% csrf_token %}
+        <!--                            {{ form.as_p }}-->
+                                    <div class="form-labels">
+                                        <div>{{ form.image|add_label_class:"form-label" }}</div>
+                                        <div>{{ form.empcode|add_label_class:"form-label" }}</div>
+                                        <div>{{ form.name|add_label_class:"form-label" }}</div>
+                                        <div>{{ form.department|add_label_class:"form-label" }}</div>
+                                        <div>{{ form.position|add_label_class:"form-label" }}</div>
+                                        <div>{{ form.gender|add_label_class:"form-label" }}</div>
+                                        <div>{{ form.country|add_label_class:"form-label" }}</div>
+                                        <div>{{ form.email|add_label_class:"form-label" }}</div>
+                                        <div>{{ form.start|add_label_class:"form-label" }}</div>
+                                        <div>{{ form.dob|add_label_class:"form-label" }}</div>
+                                        <div>{{ form.workplace|add_label_class:"form-label" }}</div>
+                                    </div>
+                                    <div class="form-inputs">
+                                        <div>{{ form.image|add_class:"f-input image" }}</div>
+                                        <div>{{ form.empcode|add_class:"f-input empcode" }}</div>
+                                        <div>{{ form.name|add_class:"f-input name" }}</div>
+                                        <div>{{ form.department|add_class:"f-input department" }}</div>
+                                        <div>{{ form.position|add_class:"f-input position" }}</div>
+                                        <div>{{ form.gender|add_class:"f-input gender" }}</div>
+                                        <div>{{ form.country|add_class:"f-input country" }}</div>
+                                        <div>{{ form.email|add_class:"f-input email" }}</div>
+                                        <div>{{ form.start|add_class:"f-input start" }}</div>
+                                        <div>{{ form.dob|add_class:"f-input dob" }}</div>
+                                        <div>{{ form.workplace|add_class:"f-input workplace" }}</div>
+                                    </div>
+                                </div>
+                                <div class="form-btn">
+                                    <button type="submit" class="btn btn-save">Save Changes</button>
+                                    <button type="button" onclick="window.location.href='{% url 'employee:index' %}'" class="btn btn-cancel">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

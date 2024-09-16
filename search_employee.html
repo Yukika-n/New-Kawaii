@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <title>Employee Search Results</title>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="{% url 'employee:index' %}" class="logo-link">SaleScience</a>
+            <nav class="navigation">
+                <div class="account">
+                    <p>Welcome Back : Admin</p>
+                </div>
+            </nav>
+            <div class="hamburger">&equiv;</div>
+        </header>
+        <main>
+            <div class="side">
+                <nav class="side-bar-navigation">
+                    <ul class="gnav">
+
+                        <li class="list-group">
+                            <div class="parent-list">General</div>
+                            <ul>
+                                <li class="child-list"><a href="{% url 'employee:dashboard' %}">Dashboard</a></li>
+                                <li class="child-list"><a href="{% url 'employee:schedule' %}">Schedule</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="list-group">
+                            <div class="parent-list">Masters</div>
+                            <ul>
+                                <li class="child-list"><a href="{% url 'employee:index' %}">Employees</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_dpt' %}">Departments</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_pst' %}">Positions</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_nt' %}">Nationalities</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="list-group">
+                            <div class="parent-list"><a>People</a></div>
+                            <ul>
+                                <li class="child-list"><a href="#">Team</a></li>
+                                <li class="child-list"><a href="#">Time Off</a></li>
+                                <li class="child-list"><a href="#">Expenses</a></li>
+                                <li class="child-list"><a href="#">Salary revision</a></li>
+                                <li class="child-list"><a href="#">Benefits</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="list-group">
+                            <div class="parent-list"><a>Payment</a></div>
+                            <ul>
+                                <li class="child-list"><a href="#">Payroll</a></li>
+                                <li class="child-list"><a href="#">Invoices</a></li>
+                                <li class="child-list"><a href="#">Payment methods</a></li>
+                                <li class="child-list"><a href="#">Pay contractors</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="list-group">
+                            <div class="parent-list"><a>Documents</a></div>
+                            <ul>
+                              <li class="child-list"><a>Agreements</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="main-content">
+                <h1 class="page-title">Search Results</h1>
+                <div class="flex-center-container">
+                    <button type="button" class="btn clear-button" onclick="window.location.href='{% url 'employee:index' %}'">Clear</button>
+                </div>
+                    <div class="employee-cards">
+                        {% for employee in employees %}
+                        <div class="employee-card">
+                            <div class="image-name-container">
+                                <div class="employee-image">
+                                    {% if employee.image %}
+                                        <a href="{% url 'employee:employee_detail' employee.id %}"><img src="{{ employee.image.url }}" alt="Employee Image"></a>
+                                    {% else %}
+                                        <p>No Image</p>
+                                    {% endif %}
+                                    <div class="mask">
+                                        <div class="caption">Details</div>
+                                    </div>
+                                </div>
+                                <div class="employee-name">
+                                    <p>{{ employee.name }}</p>
+                                </div>
+                            </div>
+                            <div class="employee-details">
+                                <table>
+                                    <tr>
+                                        <td><span class="detail-label">ID:</span></td>
+                                        <td>{{ employee.empcode }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="detail-label">Position:</span></td>
+                                        <td>{{ employee.position }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="detail-label">Dept:</span></td>
+                                        <td>{{ employee.department.name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="detail-label">Email:</span></td>
+                                        <td>{{ employee.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="detail-label">Start:</span></td>
+                                        <td>{{ employee.start }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="detail-label">Region:</span></td>
+                                        <td>{{ employee.workplace }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+<!--                <table class="employee-table">-->
+<!--                    <thead>-->
+<!--                        <tr>-->
+<!--                            <th class="column-header">Image</th>-->
+<!--                            <th class="column-header">Emp Code</th>-->
+<!--                            <th class="column-header">Name</th>-->
+<!--                            <th class="column-header">Position</th>-->
+<!--                            <th class="column-header">Department</th>-->
+<!--                            <th class="column-header">Email</th>-->
+<!--                            <th class="column-header">Joining Date</th>-->
+<!--                            <th class="column-header">Workplace</th>-->
+<!--                        </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                        {% for employee in employees %}-->
+<!--                        <tr class="employee-row">-->
+<!--                            <td class="column-data">-->
+<!--                                {% if employee.image %}-->
+<!--                                    <img src="{{ employee.image.url }}" alt="Employee Image" width="100" class="employee-image">-->
+<!--                                {% else %}-->
+<!--                                    No Image-->
+<!--                                {% endif %}-->
+<!--                            </td>-->
+<!--                            <td class="column-data">{{employee.empcode}}</td>-->
+<!--                            <td class="column-data">{{employee.name}}</td>-->
+<!--                            <td class="column-data">{{employee.position}}</td>-->
+<!--                            <td class="column-data">{{employee.department}}</td>-->
+<!--                            <td class="column-data">{{employee.email}}</td>-->
+<!--                            <td class="column-data">{{employee.start}}</td>-->
+<!--                            <td class="column-data">{{employee.workplace}}</td>-->
+<!--                            <td>-->
+<!--                                <a href="{% url 'employee:employee_detail' employee.id %}" class="btn btn-details">Details</a>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        {% empty %}-->
+<!--                        <tr>-->
+<!--                            <td colspan="8" class="no-employee">No employees found.</td>-->
+<!--                        </tr>-->
+<!--                        {% endfor %}-->
+<!--                    </tbody>-->
+<!--                </table>-->
+            </div>
+        </main>
+    </div>
+</body>
+</html>

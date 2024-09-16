@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Employee Management System</title>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="{% url 'employee:index' %}" class="logo-link">SaleScience</a>
+            <nav class="navigation">
+                <div class="account">
+                    <p>Welcome Back : Admin</p>
+                </div>
+            </nav>
+            <div class="hamburger">&equiv;</div>
+        </header>
+        <main>
+            <div class="side">
+                <nav class="side-bar-navigation">
+                    <ul class="gnav">
+                        <li class="list-group">
+                            <div class="parent-list">General</div>
+                            <ul>
+                                <li class="child-list"><a href="{% url 'employee:dashboard' %}">Dashboard</a></li>
+                                <li class="child-list"><a href="{% url 'employee:schedule' %}">Schedule</a></li>
+                            </ul>
+                        </li>
+                        <li class="list-group">
+                            <div class="parent-list">Masters</div>
+                            <ul>
+                                <li class="child-list"><a href="{% url 'employee:index' %}">Employees</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_dpt' %}">Departments</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_pst' %}">Positions</a></li>
+                                <li class="child-list"><a href="{% url 'employee:index_nt' %}">Nationalities</a></li>
+                            </ul>
+                        </li>
+                        <li class="list-group">
+                            <div class="parent-list"><a>People</a></div>
+                            <ul>
+                                <li class="child-list"><a href="#">Team</a></li>
+                                <li class="child-list"><a href="#">Time Off</a></li>
+                                <li class="child-list"><a href="#">Expenses</a></li>
+                                <li class="child-list"><a href="#">Salary revision</a></li>
+                                <li class="child-list"><a href="#">Benefits</a></li>
+                            </ul>
+                        </li>
+                        <li class="list-group">
+                            <div class="parent-list"><a>Payment</a></div>
+                            <ul>
+                                <li class="child-list"><a href="#">Payroll</a></li>
+                                <li class="child-list"><a href="#">Invoices</a></li>
+                                <li class="child-list"><a href="#">Payment methods</a></li>
+                                <li class="child-list"><a href="#">Pay contractors</a></li>
+                            </ul>
+                        </li>
+                        <li class="list-group">
+                            <div class="parent-list"><a>Documents</a></div>
+                            <ul>
+                              <li class="child-list"><a>Agreements</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="main-content">
+                <h1 class="page-title">Dashboard</h1>
+                <div class="overview-container">
+                    <div class="area-container">
+                        <div class="graph-area-grid">
+                            <div class="d-cell-1">
+                                <div class="flex-center-container total-emp-container">
+                                     <p class="total-emp">Total Employees: <span class="total-employees">{{ total_employees }}</span></p>
+                                </div>
+                                <div class="flex-center-container employees-img">
+                                    <img src="../static/employees.jpg" alt="employees">
+                                </div>
+                            </div>
+                            <div class="d-cell-2">
+                                <div class="d-card pst">
+                                    <h3 class="ribbon detail-header">Position Distribution</h3>
+                                    <div><canvas id="positionChart"></canvas></div>
+                                </div>
+
+                            </div>
+                            <div class="d-cell-3">
+                                <div class="d-card dptt">
+                                    <h3 class="ribbon detail-header">Department Distribution</h3>
+                                    <div><canvas id="departmentChart"></canvas></div>
+                                </div>
+
+                            </div>
+                            <div class="d-cell-4">
+                                <div class="d-card">
+                                    <h3 class="ribbon detail-header">Region</h3>
+                                    <div><canvas id="workplaceChart"></canvas></div>
+                                </div>
+                            </div>
+                            <div class="d-cell-5">
+                                <div class="d-card nt">
+                                    <h3 class="ribbon detail-header">Nationality</h3>
+                                    <div><canvas id="countryChart"></canvas></div>
+                                </div>
+                            </div>
+                            <div class="d-cell-6">
+                                <div class="d-card">
+                                    <h3 class="ribbon detail-header">Gender</h3>
+                                    <div><canvas id="genderChart"></canvas></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="area-container">
+                        <div class="number-area-grid">
+                            <div class="d-cell-7">
+                                <div class="d-card pst">
+                                    <h3 class="ribbon detail-header">Position Distribution</h3>
+                                    <ul class="d-list pst-list">
+                                        {% for position_count in position_counts %}
+                                        <li>{{ position_count.name }}: <span class="count">{{ position_count.count }}</span></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div>
+                            </div>
+                            <div class="d-cell-9">
+                                <div class="d-card dpt">
+                                    <h3 class="ribbon detail-header">Department Distribution</h3>
+                                    <ul class="d-list dpt-list">
+                                        {% for parent_department in parent_departments %}
+                                        <li><span class="department-name">{{ parent_department.name }}</span>
+                                            <ul class="d-sub-list">
+                                        {% for department_count in department_counts %}
+                                            {% if department_count.parent_id == parent_department.id %}
+                                                <li>{{ department_count.name }}: <span class="count">{{ department_count.count }}</span></li>
+                                            {% endif %}
+                                        {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="d-card">
+                                    <h3 class="ribbon detail-header">Region</h3>
+                                    <ul class="d-list">
+                                        {% for workplace_count in workplace_counts %}
+                                        <li>{{ workplace_count.workplace }}: <span class="count">{{ workplace_count.count }}</span></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="d-card nt">
+                                    <h3 class="ribbon detail-header">Nationality</h3>
+                                    <ul class="d-list nt-list">
+                                        {% for country_count in country_counts %}
+                                        <li>{{ country_count.name }}: <span class="count">{{ country_count.count }}</span></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="d-card">
+                                    <h3 class="ribbon detail-header">Gender</h3>
+                                    <ul class="d-list">
+                                        {% for gender_count in gender_counts %}
+                                        <li>{{ gender_count.gender }}: <span class="count">{{ gender_count.count }}</span></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let gender_ctx = document.getElementById('genderChart').getContext('2d');
+            let genderChart = new Chart(gender_ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: {{ gender_labels|safe }},
+                    datasets: [{
+                        label: 'Gender Distribution',
+                        data: {{ gender_data|safe }},
+                        backgroundColor: [
+                            '#caffbf', // Other
+                            '#bfcaff', // Male
+                            '#ffc0cb'  // Female
+                        ],
+                        borderWidth: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(1) + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            let workplace_ctx = document.getElementById('workplaceChart').getContext('2d');
+            let workplaceChart = new Chart(workplace_ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: {{ workplace_labels|safe }},
+                    datasets: [{
+                        label: 'Workplace Distribution',
+                        data: {{ workplace_data|safe }},
+                        backgroundColor: [
+                            '#eaffbf', // Nagoya
+                            '#bffff4', // Hiroshima
+                            '#d5bfff', // Osaka
+                            '#ffc0cb'  // Tokyo
+                        ],
+                        borderWidth: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(1) + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            let position_ctx = document.getElementById('positionChart').getContext('2d');
+            let positionChart = new Chart(position_ctx, {
+                type: 'bar',
+                data: {
+                    labels: {{ position_labels|safe }},
+                    datasets: [{
+                        data: {{ position_data|safe }},
+                        backgroundColor: [
+                            '#fff4bf',
+                            '#caffbf',
+                            '#bffff4',
+                            '#bfcaff',
+                            '#f4bfff',
+                            '#ffc0cb',
+                            '#fbffbf',
+                            '#bfe3ff',
+                            '#e8bfff',
+                            '#800000'
+                        ],
+                        borderRadius: 20
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(1) + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            let country_ctx = document.getElementById('countryChart').getContext('2d');
+            let countryChart = new Chart(country_ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: {{ country_labels|safe }},
+                    datasets: [{
+                        label: 'Nationality Distribution',
+                        data: {{ country_data|safe }},
+                        backgroundColor: [
+                            '#fff4bf',
+                            '#caffbf',
+                            '#bffff4',
+                            '#bfcaff',
+                            '#f4bfff',
+                            '#ffc0cb',
+                            '#fbffbf',
+                            '#bfe3ff',
+                            '#e8bfff',
+                            '#800000'
+                        ],
+                        borderWidth: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(1) + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            let department_ctx = document.getElementById('departmentChart').getContext('2d');
+            let departmentChart = new Chart(department_ctx, {
+                type: 'bar',
+                data: {
+                    labels: {{ department_labels|safe }},
+                    datasets: [{
+                        label: 'Department Distribution',
+                        data: {{ department_data|safe }},
+                        backgroundColor: [
+                            '#fff4bf',
+                            '#caffbf',
+                            '#bffff4',
+                            '#bfcaff',
+                            '#f4bfff',
+                            '#ffc0cb',
+                            '#fbffbf',
+                            '#bfe3ff',
+                            '#e8bfff',
+                            '#fff4bf',
+                            '#caffbf',
+                            '#bffff4',
+                            '#bfcaff',
+                            '#f4bfff',
+                            '#ffc0cb',
+                            '#fbffbf',
+                            '#bfe3ff',
+                            '#e8bfff',
+                            '#800000'
+
+                        ],
+                        borderRadius: 20
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display:false,
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(1) + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+
+        });
+
+    </script>
+</body>
+</html>
